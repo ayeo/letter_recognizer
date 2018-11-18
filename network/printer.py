@@ -20,9 +20,10 @@ class Printer(object):
             ['E', result[4]],
             ['F', result[5]],
           ]
-          plt.table(cellText=data, cellLoc='center')
+          table = plt.table(cellText=data, cellLoc='center')
           plt.gca().axes.get_yaxis().set_visible(False)
           plt.gca().axes.get_xaxis().set_visible(False)
-
+          table.set_fontsize(16)
+          table.scale(1, 2)
           plt.savefig('images/' + str(x + 1) + '.png', bbox_inches='tight')
           #plt.show()
