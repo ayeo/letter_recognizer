@@ -1,26 +1,14 @@
 import numpy as np
 
-X = np.array((
-  [0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 1], # A
-  [1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0], # B
-  [0, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 1, 1, 0], # C
-  [1, 1, 1, 0, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1, 1, 0], # D
-  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1, 1], # E
-  [1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0], # F
-))
 
-
-y = np.zeros((6, 6))
-np.fill_diagonal(y, 1)
-
-
-class LetterRecognizer(object):
+class Network(object):
   def __init__(self, learning_rate, input_size, output_size):
-    self.loss = []
     self.learning_rate = learning_rate
     hidden_size = int((input_size + output_size) / 2)
     self.weights1 = np.random.randn(input_size, hidden_size)
     self.weights2 = np.random.randn(hidden_size, output_size)
+    self.y = np.zeros((output_size, output_size))
+    np.fill_diagonal(self.y, 1)
 
 
   def forward(self, X):
@@ -47,12 +35,9 @@ class LetterRecognizer(object):
     self.weights2 += self.hidden_layer_result.T.dot(output_delta) * self.learning_rate
 
 
-  def train(self, X, y):
+  def train(self, X):
     o = self.forward(X)
-    self.backward(X, y, o)
+    self.backward(X, self.y, o)
 
-
-LR = LetterRecognizer(0.5, 24, 6)
-for i in range(100):
-  LR.train(X, y)
-
+  def guess(self, X):
+    return self.forward(X)
